@@ -11,7 +11,7 @@ public class ApiApplication {
 
 	@RequestMapping("/")
 	public String index() {
-		return "Hello World with a change 2 minutes 30 seconds";
+		return "Hello World with a change 2 minutes 30 seconds testing container";
 	}
 
 	public static void main(String[] args) {
