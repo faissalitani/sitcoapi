@@ -12,4 +12,4 @@ COPY pom.xml ./
 RUN ./mvnw dependency:go-offline
 
 # Default command for development — can be overridden
-CMD ["./mvnw", "spring-boot:run"]
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.fork=true"]
