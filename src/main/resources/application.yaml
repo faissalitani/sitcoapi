@@ -1,6 +1,10 @@
 spring:
   application:
     name: api
+  datasource:
+    url: jdbc:mysql://localhost:3307/sitco_db?createDatabaseIfNotExist=true
+    username: root
+    password: D0ckerQLS1TCo@
   devtools:
     restart:
       enabled: true
