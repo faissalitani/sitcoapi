@@ -1,39 +1,55 @@
 package com.sitco.api.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Builder
 @Entity
 @Table(name = "materials")
 public class Material {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "material_id")
-    private Long material_id;
+    private Long id;
 
-    @Column(name = "material_type_id")
-    private int material_type_id;
+    @ManyToOne
+    @JoinColumn(name = "material_type_id")
+    private MaterialType materialType;
 
-    @Column(name = "brand_id")
-    private int brand_id;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
     @Column(name = "decor_number")
-    private String decor_number;
+    private String decorNumber;
 
-    @Column(name = "grain_direction_id")
-    private int grain_direction_id;
+    @ManyToOne
+    @JoinColumn(name = "grain_direction_id")
+    private GrainDirection grainDirection;
 
     @Column(name = "thickness")
     private BigDecimal thickness;
 
-    @Column(name = "moisture_type_id")
-    private int moisture_type_id;
+    @ManyToOne
+    @JoinColumn(name = "moisture_type_id")
+    private MoistureType moistureType;
+
+    @OneToMany(mappedBy = "material")
+    @ToString.Exclude
+    @Builder.Default
+    private List<Panel> panels = new ArrayList<>();
+
+    public void addPanel(Panel panel) {
+        panels.add(panel);
+        panel.setMaterial(this);
+    }
 }

@@ -1,15 +1,13 @@
 package com.sitco.api.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "brands")
 public class Brand {
@@ -20,4 +18,7 @@ public class Brand {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "full_name")
+    private String full_name;
 }
