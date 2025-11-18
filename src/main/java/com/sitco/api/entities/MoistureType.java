@@ -22,4 +22,8 @@ public class MoistureType {
     @Column(name = "description")
     private String description;
 
+    public MoistureType(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

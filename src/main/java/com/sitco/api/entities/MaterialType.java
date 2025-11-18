@@ -21,4 +21,9 @@ public class MaterialType {
 
     @Column( name = "description")
     private String description;
+
+    public MaterialType(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

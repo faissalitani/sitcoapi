@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Builder
 @Entity
 @Table(name = "materials")
 public class Material {
@@ -45,11 +44,20 @@ public class Material {
 
     @OneToMany(mappedBy = "material")
     @ToString.Exclude
-    @Builder.Default
     private List<Panel> panels = new ArrayList<>();
 
-    public void addPanel(Panel panel) {
-        panels.add(panel);
-        panel.setMaterial(this);
+    public Material(MaterialType materialType,
+                    Brand brand,
+                    String decorNumber,
+                    GrainDirection grainDirection,
+                    BigDecimal thickness,
+                    MoistureType moistureType) {
+        this.materialType = materialType;
+        this.brand = brand;
+        this.decorNumber = decorNumber;
+        this.grainDirection = grainDirection;
+        this.thickness = thickness;
+        this.moistureType = moistureType;
     }
+
 }

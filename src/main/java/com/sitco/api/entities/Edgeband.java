@@ -1,20 +1,19 @@
 package com.sitco.api.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "edgebands")
 public class Edgeband {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "edgeband_id")
     private Byte id;
 
@@ -26,5 +25,11 @@ public class Edgeband {
 
     @Column(name = "width", precision = 4, scale = 2)
     private BigDecimal width;
+
+    public Edgeband(String name, BigDecimal thickness, BigDecimal width) {
+        this.name = name;
+        this.thickness = thickness;
+        this.width = width;
+    }
 
 }

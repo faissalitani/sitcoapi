@@ -3,6 +3,7 @@ package com.sitco.api.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -12,9 +13,11 @@ public class HomeController {
     private String appName;
 
     @RequestMapping("/")
-    public String index() {
-        System.out.println(appName);
-        return "index.html";
+    public String index(Model model) {
+        model.addAttribute("name", "Faissal");
+        return "index";
     }
+
+
 
 }

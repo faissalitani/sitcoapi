@@ -23,7 +23,7 @@ public class CuttingJob {
     @Column(name = "cutting_job_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

@@ -22,4 +22,9 @@ public class GrainDirection {
     @Column(name = "description")
     private String description;
 
+    public GrainDirection(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
 }

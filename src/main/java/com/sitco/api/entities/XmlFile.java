@@ -3,8 +3,6 @@ package com.sitco.api.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -16,8 +14,7 @@ public class XmlFile {
     @Column(name = "xml_file_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne
     @JoinColumn(name = "cutting_job_id")
     private CuttingJob cuttingJob;
 

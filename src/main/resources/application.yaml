@@ -2,9 +2,14 @@ spring:
   application:
     name: api
   datasource:
-    url: jdbc:mysql://localhost:3307/sitco_db?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:9090/sitco_db?createDatabaseIfNotExist=true
     username: root
     password: D0ckerQLS1TCo@
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
   devtools:
     restart:
       enabled: true
