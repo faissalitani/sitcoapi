@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Entity
 @Table(name = "edgebands")
-public class Edgeband {
+public class EdgeBand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "edgeband_id")
@@ -26,7 +26,7 @@ public class Edgeband {
     @Column(name = "width", precision = 4, scale = 2)
     private BigDecimal width;
 
-    public Edgeband(String name, BigDecimal thickness, BigDecimal width) {
+    public EdgeBand(String name, BigDecimal thickness, BigDecimal width) {
         this.name = name;
         this.thickness = thickness;
         this.width = width;

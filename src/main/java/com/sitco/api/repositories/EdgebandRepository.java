@@ -1,7 +1,10 @@
 package com.sitco.api.repositories;
 
-import com.sitco.api.entities.Edgeband;
+import com.sitco.api.entities.EdgeBand;
 import org.springframework.data.repository.CrudRepository;
 
-public interface EdgebandRepository extends CrudRepository<Edgeband, Integer> {
+import java.util.List;
+
+public interface EdgebandRepository extends CrudRepository<EdgeBand, Integer> {
+    List<EdgeBand> findAll();
 }

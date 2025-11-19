@@ -3,10 +3,10 @@ package com.sitco.api.dtos;
 import lombok.Data;
 
 @Data
-public class UserDto {
-    private Long id;
+public class RegisterUserRequest {
     private String firstName;
     private String lastName;
     private String email;
-    RoleDto roleDto;
+    private String password;
+    private Integer roleId;
 }
