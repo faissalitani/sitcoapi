@@ -1,7 +1,6 @@
 package com.sitco.api.mappers;
 
 import com.sitco.api.dtos.RegisterUserRequest;
-import com.sitco.api.dtos.UpdateUserRequest;
 import com.sitco.api.dtos.UserDto;
 import com.sitco.api.entities.User;
 import org.mapstruct.Mapper;
@@ -15,5 +14,6 @@ public interface UserMapper {
 
     User toEntity(RegisterUserRequest request);
 
-    //void update(UpdateUserRequest request, @MappingTarget User user);
+    @Mapping(target = "id", ignore = true)
+    void update(UserDto request, @MappingTarget User user);
 }

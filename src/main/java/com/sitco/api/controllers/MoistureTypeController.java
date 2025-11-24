@@ -5,6 +5,7 @@ import com.sitco.api.entities.MoistureType;
 import com.sitco.api.mappers.MoistureTypeMapper;
 import com.sitco.api.repositories.MoistureTypeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +20,10 @@ public class MoistureTypeController {
     MoistureTypeMapper moistureTypeMapper;
 
     @GetMapping
-    public List<MoistureTypeDto> getAllMoistureTypes(){
+    public ResponseEntity<List<MoistureTypeDto>> getAllMoistureTypes(){
         List<MoistureType> moistureTypes;
         moistureTypes =  moistureTypeRepository.findAll();
 
-        return moistureTypes.stream().map(moistureTypeMapper::toDto).toList();
+        return ResponseEntity.ok().body(moistureTypes.stream().map(moistureTypeMapper::toDto).toList());
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface MaterialTypeRepository extends CrudRepository<MaterialType, Integer> {
+public interface MaterialTypeRepository extends CrudRepository<MaterialType, Byte> {
     List<MaterialType> findAll();
 }

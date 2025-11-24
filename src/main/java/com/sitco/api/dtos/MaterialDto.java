@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 @Data
 public class MaterialDto {
+    private Long id;
     private MaterialTypeDto materialTypeDto;
     private BrandDto brandDto;
     private String decorNumber;

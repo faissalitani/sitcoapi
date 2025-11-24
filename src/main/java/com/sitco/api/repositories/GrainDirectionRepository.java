@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface GrainDirectionRepository extends CrudRepository<GrainDirection, Integer> {
+public interface GrainDirectionRepository extends CrudRepository<GrainDirection, Byte> {
     List<GrainDirection> findAll();
 }

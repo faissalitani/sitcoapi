@@ -27,7 +27,7 @@ public class CuttingJob {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @Column(name = "date_created")
+    @Column(name = "date_created", updatable = false,  insertable = false)
     private Instant dateCreated;
 
     @ColumnDefault("1")
@@ -38,11 +38,12 @@ public class CuttingJob {
     @JdbcTypeCode(SqlTypes.JSON)
     private Map<String, Object> partsList;
 
-    @Column(name = "status", length = 45)
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
 
     @Column(name = "report")
-    private byte[] report;
+    private String report;
 
     @Column(name = "history")
     @JdbcTypeCode(SqlTypes.JSON)

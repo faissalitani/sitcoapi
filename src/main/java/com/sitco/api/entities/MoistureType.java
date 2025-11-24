@@ -14,7 +14,7 @@ public class MoistureType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moisture_type_id")
-    private int id;
+    private Byte id;
 
     @Column(name = "name")
     private String name;

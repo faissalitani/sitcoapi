@@ -14,7 +14,7 @@ public class GrainDirection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grain_direction_id")
-    private int id;
+    private Byte id;
 
     @Column(name = "name")
     private String name;

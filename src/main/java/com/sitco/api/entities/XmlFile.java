@@ -22,6 +22,6 @@ public class XmlFile {
     private String fileName;
 
     @Column(name = "file_content")
-    private byte[] fileContent;
+    private String fileContent;
 
 }

@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface EdgebandRepository extends CrudRepository<EdgeBand, Integer> {
+public interface EdgeBandRepository extends CrudRepository<EdgeBand, Byte> {
     List<EdgeBand> findAll();
 }

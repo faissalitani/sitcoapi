@@ -21,12 +21,12 @@ public class MaterialService {
     private final GrainDirectionRepository grainDirectionRepository;
     private final MoistureTypeRepository moistureTypeRepository;
 
-    public void addMaterial(int materialTypeId,
+    public void addMaterial(Byte materialTypeId,
                             int brandId,
                             String decorNumber,
-                            int grainDirectionId,
+                            Byte grainDirectionId,
                             BigDecimal thickness,
-                            int moistureTypeId) {
+                            Byte moistureTypeId) {
 
         MaterialType materialType = materialTypeRepository.findById(materialTypeId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Material Type ID: " + materialTypeId));

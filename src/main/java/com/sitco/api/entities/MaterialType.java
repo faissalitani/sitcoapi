@@ -14,7 +14,7 @@ public class MaterialType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "material_type_id")
-    private int id;
+    private Byte id;
 
     @Column(name = "name")
     private String name;
