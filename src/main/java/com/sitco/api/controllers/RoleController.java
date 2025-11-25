@@ -20,7 +20,7 @@ public class RoleController {
 
     @GetMapping
     public List<RoleDto> getRoles() {
-        List<Role> roles = roleRepository.findAll();
+        var roles = roleRepository.findAll();
         return roles.stream().map(roleMapper::toDto).toList();
     }
 

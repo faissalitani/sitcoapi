@@ -5,12 +5,14 @@ import com.sitco.api.dtos.BrandDto;
 import com.sitco.api.entities.Brand;
 import com.sitco.api.mappers.BrandMapper;
 import com.sitco.api.repositories.BrandRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -37,10 +39,15 @@ public class BrandController {
     }
 
     @PostMapping
-    public ResponseEntity<BrandDto> createBrand(
-            @RequestBody BrandDto request,
+    public ResponseEntity<?> createBrand(
+            @Valid @RequestBody BrandDto request,
             UriComponentsBuilder uriBuilder
     ){
+        if (brandrepository.existsByName(request.getName()) || brandrepository.existsByFullName(request.getFullName())) {
+            return ResponseEntity.badRequest().body(
+                    Map.of("name", "Brand name is already registered.")
+            );
+        }
         var brand = brandmapper.toEntity(request);
         brandrepository.save(brand);
 
@@ -52,7 +59,7 @@ public class BrandController {
     @PutMapping("/{id}")
     public ResponseEntity<BrandDto> updateBrand(
             @PathVariable Integer id,
-            @RequestBody BrandDto brandDto,
+            @Valid @RequestBody BrandDto brandDto,
             UriComponentsBuilder uriBuilder
     ){
         var brand = brandrepository.findById(id).orElse(null);
@@ -63,9 +70,7 @@ public class BrandController {
         brandrepository.save(brand);
         brandDto.setId(brand.getId());
 
-
-        var uri = uriBuilder.path("/brands/{id}").buildAndExpand(brandDto.getId()).toUri();
-        return ResponseEntity.created(uri).body(brandDto);
+        return ResponseEntity.ok(brandDto);
     }
 
     @DeleteMapping("/{id}")

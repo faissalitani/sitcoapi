@@ -4,12 +4,14 @@ import com.sitco.api.dtos.CustomerDto;
 import com.sitco.api.entities.Customer;
 import com.sitco.api.mappers.CustomerMapper;
 import com.sitco.api.repositories.CustomerRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -36,10 +38,15 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDto> createCustomer(
-            @RequestBody CustomerDto request,
+    public ResponseEntity<?> createCustomer(
+            @Valid @RequestBody CustomerDto request,
             UriComponentsBuilder uriComponentsBuilder
     ) {
+        if (customerRepository.existsByPhone(request.getPhone()))
+            return ResponseEntity.badRequest().body(
+                    Map.of("phone", "Phone number already registered.")
+            );
+
         var customer = customerMapper.toEntity(request);
         customerRepository.save(customer);
 
@@ -50,7 +57,7 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(
-            @RequestBody CustomerDto customerDto,
+            @Valid @RequestBody CustomerDto customerDto,
             @PathVariable Long id
     ){
         var customer = customerRepository.findById(id).orElse(null);

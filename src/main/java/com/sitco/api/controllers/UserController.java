@@ -6,6 +6,7 @@ import com.sitco.api.dtos.UserDto;
 import com.sitco.api.mappers.RoleMapper;
 import com.sitco.api.repositories.RoleRepository;
 import com.sitco.api.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import com.sitco.api.mappers.UserMapper;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -54,10 +56,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(
-            @RequestBody RegisterUserRequest request,
+    public ResponseEntity<?> registerUser(
+            @Valid @RequestBody RegisterUserRequest request,
             UriComponentsBuilder uriBuilder
     ){
+        if(userRepository.existsByEmail(request.getEmail()))
+            return ResponseEntity.badRequest().body(
+                    Map.of("email", "Email is already registered")
+            );
+
         var role = roleRepository.findById(request.getRoleId()).orElse(null);
         if(role == null){
             return ResponseEntity.notFound().build();
@@ -124,4 +131,5 @@ public class UserController {
         userRepository.save(user);
         return ResponseEntity.noContent().build();
     }
+
 }

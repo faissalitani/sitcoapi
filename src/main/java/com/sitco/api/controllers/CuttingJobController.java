@@ -3,15 +3,14 @@ package com.sitco.api.controllers;
 import com.sitco.api.dtos.AddUpdateCuttingJobRequest;
 import com.sitco.api.dtos.CuttingJobDto;
 import com.sitco.api.entities.CuttingJob;
-import com.sitco.api.entities.Status;
 import com.sitco.api.mappers.CuttingJobMapper;
 import com.sitco.api.repositories.CustomerRepository;
 import com.sitco.api.repositories.CuttingJobRepository;
 import com.sitco.api.repositories.StatusRepository;
-import com.sun.jdi.LongType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +50,7 @@ public class CuttingJobController {
     @Transactional
     @PostMapping
     public ResponseEntity<CuttingJobDto>  createCuttingJob(
-            @RequestBody AddUpdateCuttingJobRequest request,
+            @Valid @RequestBody AddUpdateCuttingJobRequest request,
             UriComponentsBuilder uriBuilder
     ) {
         var customer = customerRepository.findById(request.getCustomerId()).orElse(null);
@@ -80,7 +79,7 @@ public class CuttingJobController {
     @PutMapping("/{id}")
     public ResponseEntity<CuttingJobDto> updateCuttingJob(
             @PathVariable Long id,
-            @RequestBody AddUpdateCuttingJobRequest request
+            @Valid @RequestBody AddUpdateCuttingJobRequest request
     ){
         var cuttingJob = cuttingJobRepository.findById(id).orElse(null);
         if (cuttingJob == null) {

@@ -22,7 +22,7 @@ public class XmlFileController {
 
     @GetMapping
     public ResponseEntity<List<XmlFileDto>> getAllXmlFiles() {
-        List<XmlFile> xmlFiles =  xmlFileRepository.findAll();
+        var xmlFiles =  xmlFileRepository.findAll();
 
         return ResponseEntity.ok()
                 .body(xmlFiles.stream().map(xmlFileMapper::toDto)

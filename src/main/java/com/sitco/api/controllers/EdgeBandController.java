@@ -5,12 +5,14 @@ import com.sitco.api.dtos.EdgeBandDto;
 import com.sitco.api.entities.EdgeBand;
 import com.sitco.api.mappers.EdgeBandMapper;
 import com.sitco.api.repositories.EdgeBandRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -40,10 +42,14 @@ public class EdgeBandController {
     }
 
     @PostMapping
-    public ResponseEntity<EdgeBandDto> createEdgeBand(
-            @RequestBody EdgeBandDto request,
+    public ResponseEntity<?> createEdgeBand(
+            @Valid @RequestBody EdgeBandDto request,
             UriComponentsBuilder uriBuilder
     ){
+        if(edgeBandRepository.existsByName(request.getName()))
+            return ResponseEntity.badRequest().body(
+                    Map.of("name", "Edgeband name already exists.")
+            );
         var edgeBand = edgeBandMapper.toEntity(request);
         edgeBandRepository.save(edgeBand);
 
@@ -55,7 +61,7 @@ public class EdgeBandController {
     @PutMapping("/{id}")
     public ResponseEntity<EdgeBandDto> updateEdgeBand(
             @PathVariable Byte id,
-            @RequestBody EdgeBandDto edgeBandDto
+            @Valid @RequestBody EdgeBandDto edgeBandDto
     ){
         var edgeband = edgeBandRepository.findById(id).orElse(null);
         if(edgeband == null){

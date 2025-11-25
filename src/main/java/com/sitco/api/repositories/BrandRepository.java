@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface BrandRepository extends CrudRepository<Brand, Integer> {
     List<Brand> findAll();
+
+    boolean existsByName(String name);
+
+    boolean existsByFullName(String fullName);
 }
