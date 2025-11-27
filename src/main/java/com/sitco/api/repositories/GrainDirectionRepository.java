@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface GrainDirectionRepository extends CrudRepository<GrainDirection, Byte> {
     List<GrainDirection> findAll();
+
+    boolean existsByName(String name);
 }

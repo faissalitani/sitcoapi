@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Data
 public class EdgeBandDto {
     private Byte id;
+
     @NotBlank(message = "Name is required.")
     private String name;
 

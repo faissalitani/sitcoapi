@@ -21,6 +21,7 @@ public class EdgeBandController {
     EdgeBandRepository edgeBandRepository;
     EdgeBandMapper edgeBandMapper;
 
+    // CRUD Methods
     @GetMapping
     public ResponseEntity<List<EdgeBandDto>> getAllEdgeBands(){
         List<EdgeBand> edgeBands;
@@ -34,7 +35,7 @@ public class EdgeBandController {
     public ResponseEntity<EdgeBandDto> getEdgeBandById(
             @PathVariable Byte id
     ){
-        var edgeband = edgeBandRepository.findById(id).orElse(null);
+        var edgeband = findEdgeBandById(id);
         if(edgeband == null){
             return ResponseEntity.notFound().build();
         }
@@ -63,7 +64,7 @@ public class EdgeBandController {
             @PathVariable Byte id,
             @Valid @RequestBody EdgeBandDto edgeBandDto
     ){
-        var edgeband = edgeBandRepository.findById(id).orElse(null);
+        var edgeband = findEdgeBandById(id);
         if(edgeband == null){
             return ResponseEntity.notFound().build();
         }
@@ -78,11 +79,16 @@ public class EdgeBandController {
     public ResponseEntity<Void> deleteEdgeBand(
             @PathVariable Byte id
     ){
-        var edgeBand = edgeBandRepository.findById(id).orElse(null);
+        var edgeBand = findEdgeBandById(id);
         if(edgeBand == null){
             return ResponseEntity.notFound().build();
         }
         edgeBandRepository.delete(edgeBand);
         return ResponseEntity.noContent().build();
+    }
+
+    // Helper Methods
+    EdgeBand findEdgeBandById(Byte id){
+        return edgeBandRepository.findById(id).orElse(null);
     }
 }

@@ -5,12 +5,14 @@ import com.sitco.api.dtos.MaterialDto;
 import com.sitco.api.entities.Material;
 import com.sitco.api.mappers.MaterialMapper;
 import com.sitco.api.repositories.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -24,6 +26,7 @@ public class MaterialController{
     MaterialRepository materialrepository;
     MaterialMapper materialMapper;
 
+    //CRUD Methods
     @GetMapping
     public ResponseEntity<List<MaterialDto>> getAllMaterials(
             @RequestParam(required = false, name = "materialTypeId") Integer materialTypeId
@@ -41,7 +44,7 @@ public class MaterialController{
     @GetMapping("/{id}")
     public ResponseEntity<MaterialDto> getMaterialById(
             @PathVariable Long id){
-        Material material =  materialrepository.findById(id).orElse(null);
+        Material material =  findMaterialById(id);
         if(material == null){
             return ResponseEntity.notFound().build();
         }
@@ -49,8 +52,8 @@ public class MaterialController{
     }
 
     @PostMapping
-    public ResponseEntity<MaterialDto> createMaterial(
-            @RequestBody AddUpdateMaterialRequest request,
+    public ResponseEntity<?> createMaterial(
+            @Valid @RequestBody AddUpdateMaterialRequest request,
             UriComponentsBuilder uriComponentsBuilder
     ){
         var materialType = materialTypeRepository.findById(request.getMaterialTypeId()).orElse(null);
@@ -60,6 +63,22 @@ public class MaterialController{
         if(materialType == null || brand == null || grainDirection == null || moistureType == null){
             return ResponseEntity.badRequest().build();
         }
+
+        var match = materialrepository.findExactMatch(
+                request.getMaterialTypeId(),
+                request.getBrandId(),
+                request.getDecorNumber(),
+                request.getGrainDirectionId(),
+                request.getThickness(),
+                request.getMoistureTypeId()
+        );
+
+        if(match.isPresent()){
+            return ResponseEntity.badRequest().body(
+                    Map.of("material", "Material already exists.")
+            );
+        }
+
 
         var material =  materialMapper.toEntity(request);
         material.setMaterialType(materialType);
@@ -77,9 +96,9 @@ public class MaterialController{
     @PutMapping("/{id}")
     public ResponseEntity<MaterialDto> updateMaterial(
             @PathVariable Long id,
-            @RequestBody AddUpdateMaterialRequest request
+            @Valid @RequestBody AddUpdateMaterialRequest request
     ){
-        var material = materialrepository.findById(id).orElse(null);
+        var material = findMaterialById(id);
         if(material == null){
             return ResponseEntity.notFound().build();
         }
@@ -109,11 +128,17 @@ public class MaterialController{
     public ResponseEntity<Void> deleteMaterial(
             @PathVariable Long id
     ){
-        var material = materialrepository.findById(id).orElse(null);
+        var material = findMaterialById(id);
         if(material == null){
             return ResponseEntity.notFound().build();
         }
         materialrepository.delete(material);
         return ResponseEntity.noContent().build();
     }
+
+    // Helper Methods
+    Material findMaterialById(Long id){
+        return materialrepository.findById(id).orElse(null);
+    }
+
 }

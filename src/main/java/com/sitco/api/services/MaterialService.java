@@ -82,13 +82,13 @@ public class MaterialService {
     }
 
     // Using a stored procedure
-    @Transactional
+/*    @Transactional
     public void findByMoistureType(int moistureTypeId) {
         List<Material> materials = materialRepository.findMaterialsByMoistureType(moistureTypeId);
         materials.forEach(material -> {
             System.out.println(material.getId());
         });
-    }
+    }*/
 
     // Query by example.
     @Transactional

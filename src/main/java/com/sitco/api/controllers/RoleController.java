@@ -4,12 +4,14 @@ import com.sitco.api.dtos.RoleDto;
 import com.sitco.api.entities.Role;
 import com.sitco.api.mappers.RoleMapper;
 import com.sitco.api.repositories.RoleRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class RoleController {
     RoleRepository roleRepository;
     RoleMapper roleMapper;
 
+    // CRUD Methods
     @GetMapping
     public List<RoleDto> getRoles() {
         var roles = roleRepository.findAll();
@@ -27,7 +30,7 @@ public class RoleController {
     @GetMapping("/{id}")
     public ResponseEntity<RoleDto> getRoleById(
             @PathVariable Byte id) {
-        var role = roleRepository.findById(id).orElse(null);
+        var role = findRoleById(id);
         if (role == null) {
             return ResponseEntity.notFound().build();
         }
@@ -35,10 +38,15 @@ public class RoleController {
     }
 
     @PostMapping
-    public ResponseEntity<RoleDto> createRole(
-            @RequestBody RoleDto request,
+    public ResponseEntity<?> createRole(
+            @Valid @RequestBody RoleDto request,
             UriComponentsBuilder uriComponentsBuilder
-            ){
+    ){
+        if (roleRepository.existsByName(request.getName()))
+            return ResponseEntity.badRequest().body(
+                    Map.of("role", "Role already exists.")
+            );
+
         var role = roleMapper.toEntity(request);
         roleRepository.save(role);
 
@@ -52,7 +60,7 @@ public class RoleController {
             @PathVariable Byte id,
             @RequestBody RoleDto roleDto
     ){
-        var role = roleRepository.findById(id).orElse(null);
+        var role = findRoleById(id);
         if (role == null) {
             return ResponseEntity.notFound().build();
         }
@@ -68,11 +76,16 @@ public class RoleController {
     public ResponseEntity<Void> deleteRole(
             @PathVariable Byte id
     ){
-        var role = roleRepository.findById(id).orElse(null);
+        var role = findRoleById(id);
         if (role == null) {
             return ResponseEntity.notFound().build();
         }
         roleRepository.delete(role);
         return ResponseEntity.noContent().build();
+    }
+
+    // Helper Methods
+    Role findRoleById (Byte id) {
+        return roleRepository.findById(id).orElse(null);
     }
 }

@@ -20,6 +20,7 @@ public class CustomerController {
     CustomerRepository customerRepository;
     CustomerMapper customerMapper;
 
+    // CRUD Methods
     @GetMapping
     public ResponseEntity<List<CustomerDto>> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
@@ -30,7 +31,7 @@ public class CustomerController {
     public ResponseEntity<CustomerDto> getCustomerById(
             @PathVariable Long id
     ){
-        var customer = customerRepository.findById(id).orElse(null);
+        var customer = findCustomerById(id);
         if(customer == null) {
             return ResponseEntity.notFound().build();
         }
@@ -60,7 +61,7 @@ public class CustomerController {
             @Valid @RequestBody CustomerDto customerDto,
             @PathVariable Long id
     ){
-        var customer = customerRepository.findById(id).orElse(null);
+        var customer = findCustomerById(id);
         if (customer == null) {
             return ResponseEntity.notFound().build();
         }
@@ -75,7 +76,7 @@ public class CustomerController {
     public ResponseEntity<Void>  deleteCustomer(
             @PathVariable Long id
     ){
-        var customer = customerRepository.findById(id).orElse(null);
+        var customer = findCustomerById(id);
         if (customer == null) {
             return ResponseEntity.notFound().build();
         }
@@ -83,5 +84,9 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+    // Helper Methods
+    Customer findCustomerById(Long id){
+        return customerRepository.findById(id).orElse(null);
+    }
 
 }

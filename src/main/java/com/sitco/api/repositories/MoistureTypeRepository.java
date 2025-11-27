@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface MoistureTypeRepository extends CrudRepository<MoistureType, Byte> {
     List<MoistureType> findAll();
+
+    boolean existsByNameOrDescription(String name, String description);
 }

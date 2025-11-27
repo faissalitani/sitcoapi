@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface PanelRepository extends CrudRepository<Panel,Long> {
 
@@ -18,11 +19,20 @@ public interface PanelRepository extends CrudRepository<Panel,Long> {
 
     List<Panel> findByMaterialId(Long materialId);
 
-    @Query(value = "SELECT * FROM panels p where p.width between :min and :max", nativeQuery = true)
+    @Query(value = "select * from panels p where p.width between :min and :max", nativeQuery = true)
     List<Panel> findPanelsSQL(@Param("min")BigDecimal min, @Param("max") BigDecimal max);
 
+    @Query(value = "select * from panels p where" +
+            " p.material_id = :materialId and" +
+            " p.height = :height and" +
+            " p.width = :width", nativeQuery = true)
+    Optional<Panel> findExactMatch(
+            @Param("materialId") Long materialId,
+            @Param("height") BigDecimal height,
+            @Param("width") BigDecimal width);
 
-    @Query("SELECT count(*) FROM Panel p where p.width between :min and :max")
+
+    @Query("select count(*) from Panel p where p.width between :min and :max")
     int findPanelsCount(@Param("min")BigDecimal min, @Param("max") BigDecimal max);
 
     @Modifying

@@ -4,12 +4,14 @@ import com.sitco.api.dtos.GrainDirectionDto;
 import com.sitco.api.entities.GrainDirection;
 import com.sitco.api.mappers.GrainDirectionMapper;
 import com.sitco.api.repositories.GrainDirectionRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class GrainDirectionController {
     GrainDirectionRepository grainDirectionRepository;
     GrainDirectionMapper grainDirectionMapper;
 
+    // CRUD Methods
     @GetMapping
     public ResponseEntity<List<GrainDirectionDto>> getGrainDirections() {
         List<GrainDirection> grainDirections;
@@ -30,7 +33,7 @@ public class GrainDirectionController {
     public ResponseEntity<GrainDirectionDto> getGrainDirectionById(
             @PathVariable Byte id
     ){
-        var grainDirection = grainDirectionRepository.findById(id).orElse(null);
+        var grainDirection = findGrainDirectionById(id);
         if(grainDirection == null){
             return ResponseEntity.notFound().build();
         }
@@ -38,11 +41,15 @@ public class GrainDirectionController {
     }
 
     @PostMapping
-    public ResponseEntity<GrainDirectionDto> createGrainDirection(
-            @RequestBody GrainDirectionDto request,
+    public ResponseEntity<?> createGrainDirection(
+            @Valid @RequestBody GrainDirectionDto request,
             UriComponentsBuilder uriComponentsBuilder
 
     ){
+        if(grainDirectionRepository.existsByName(request.getName()))
+            return ResponseEntity.badRequest().body(
+                    Map.of("Grain Direction", "Grain direction already exists.")
+            );
         var grainDirection = grainDirectionMapper.toEntity(request);
         grainDirectionRepository.save(grainDirection);
 
@@ -54,9 +61,9 @@ public class GrainDirectionController {
     @PutMapping("/{id}")
     public ResponseEntity<GrainDirectionDto> updateGrainDirection(
             @PathVariable Byte id,
-            @RequestBody GrainDirectionDto grainDirectionDto
+            @Valid @RequestBody GrainDirectionDto grainDirectionDto
     ){
-        var grainDirection = grainDirectionRepository.findById(id).orElse(null);
+        var grainDirection = findGrainDirectionById(id);
 
         if (grainDirection == null) {
             return ResponseEntity.notFound().build();
@@ -74,7 +81,7 @@ public class GrainDirectionController {
     public ResponseEntity<Void> deleteGrainDirection(
             @PathVariable Byte id
     ){
-        var grainDirection = grainDirectionRepository.findById(id).orElse(null);
+        var grainDirection = findGrainDirectionById(id);
 
         if (grainDirection == null) {
             return ResponseEntity.notFound().build();
@@ -83,4 +90,11 @@ public class GrainDirectionController {
         grainDirectionRepository.delete(grainDirection);
         return ResponseEntity.noContent().build();
     }
+
+    // Helper Methods
+    GrainDirection findGrainDirectionById(Byte id){
+        return grainDirectionRepository.findById(id).orElse(null);
+    }
+
+
 }

@@ -21,6 +21,7 @@ public class BrandController {
     BrandRepository brandrepository;
     BrandMapper brandmapper;
 
+    //CRUD Methods
     @GetMapping
     public ResponseEntity<List<BrandDto>> getBrands(){
         List<Brand> brands = brandrepository.findAll();
@@ -31,7 +32,7 @@ public class BrandController {
     public ResponseEntity<BrandDto> getBrandById(
             @PathVariable Integer id)
     {
-        var brand = brandrepository.findById(id).orElse(null);
+        var brand = findBrandById(id);
         if (brand == null) {
             return ResponseEntity.notFound().build();
         }
@@ -43,9 +44,9 @@ public class BrandController {
             @Valid @RequestBody BrandDto request,
             UriComponentsBuilder uriBuilder
     ){
-        if (brandrepository.existsByName(request.getName()) || brandrepository.existsByFullName(request.getFullName())) {
+        if (brandrepository.existsByNameOrFullName(request.getName(), request.getFullName())) {
             return ResponseEntity.badRequest().body(
-                    Map.of("name", "Brand name is already registered.")
+                    Map.of("brand", "Brand already exists.")
             );
         }
         var brand = brandmapper.toEntity(request);
@@ -59,10 +60,9 @@ public class BrandController {
     @PutMapping("/{id}")
     public ResponseEntity<BrandDto> updateBrand(
             @PathVariable Integer id,
-            @Valid @RequestBody BrandDto brandDto,
-            UriComponentsBuilder uriBuilder
+            @Valid @RequestBody BrandDto brandDto
     ){
-        var brand = brandrepository.findById(id).orElse(null);
+        var brand = findBrandById(id);
         if(brand == null){
             return ResponseEntity.notFound().build();
         }
@@ -75,11 +75,16 @@ public class BrandController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBrand(@PathVariable Integer id){
-        var brand = brandrepository.findById(id).orElse(null);
+        var brand = findBrandById(id);
         if(brand == null){
             return ResponseEntity.notFound().build();
         }
         brandrepository.delete(brand);
         return ResponseEntity.noContent().build();
+    }
+
+    //Helper Methods
+    Brand findBrandById(Integer id){
+        return brandrepository.findById(id).orElse(null);
     }
 }

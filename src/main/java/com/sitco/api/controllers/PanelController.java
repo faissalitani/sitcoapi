@@ -2,10 +2,12 @@ package com.sitco.api.controllers;
 
 import com.sitco.api.dtos.AddUpdatePanelDto;
 import com.sitco.api.dtos.PanelDto;
+import com.sitco.api.entities.Material;
 import com.sitco.api.entities.Panel;
 import com.sitco.api.mappers.PanelMapper;
 import com.sitco.api.repositories.MaterialRepository;
 import com.sitco.api.repositories.PanelRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -22,6 +25,7 @@ public class PanelController {
     PanelRepository panelRepository;
     PanelMapper panelMapper;
 
+    //CRUD Methods
     @GetMapping
     public ResponseEntity<List<PanelDto>> getAllPanels(){
         List<Panel> panels;
@@ -42,12 +46,24 @@ public class PanelController {
     }
 
     @PostMapping
-    public ResponseEntity<PanelDto> createPanel(
-            @RequestBody AddUpdatePanelDto request,
+    public ResponseEntity<?> createPanel(
+            @Valid @RequestBody AddUpdatePanelDto request,
             UriComponentsBuilder uriComponentsBuilder
 
             ){
-        var material = materialRepository.findById(request.getMaterialId()).orElse(null);
+        var match = panelRepository.findExactMatch(
+                request.getMaterialId(),
+                request.getHeight(),
+                request.getWidth()
+        );
+
+        if(match.isPresent()){
+            return ResponseEntity.badRequest().body(
+                    Map.of("panel", "Panel Already Exists")
+            );
+        }
+
+        var material = findMaterialById(request.getMaterialId());
         if(material == null){
             return ResponseEntity.badRequest().build();
         }
@@ -66,12 +82,12 @@ public class PanelController {
             @PathVariable Long id,
             @RequestBody AddUpdatePanelDto request
     ){
-        var panel = panelRepository.findById(id).orElse(null);
+        var panel = findPanelById(id);
         if(panel == null){
             return ResponseEntity.notFound().build();
         }
 
-        var material = materialRepository.findById(request.getMaterialId()).orElse(null);
+        var material = findMaterialById(request.getMaterialId());
         if(material == null){
             return ResponseEntity.badRequest().build();
         }
@@ -90,11 +106,20 @@ public class PanelController {
     public ResponseEntity<Void> deletePanel(
             @PathVariable Long id
     ){
-        var panel = panelRepository.findById(id).orElse(null);
+        var panel = findPanelById(id);
         if(panel == null){
             return ResponseEntity.notFound().build();
         }
         panelRepository.delete(panel);
         return ResponseEntity.noContent().build();
+    }
+
+    // Helper Methods
+    Panel findPanelById(Long id){
+        return panelRepository.findById(id).orElse(null);
+    }
+
+    Material findMaterialById(Long id){
+        return materialRepository.findById(id).orElse(null);
     }
 }

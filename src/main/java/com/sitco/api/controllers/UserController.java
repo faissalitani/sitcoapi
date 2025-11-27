@@ -28,6 +28,7 @@ public class UserController {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
+    // CRUD Methods
     @GetMapping
     public Iterable<UserDto> getAllUsers(
             @RequestHeader(required = false, name = "x-auth-token")  String authToken,

@@ -5,6 +5,7 @@ import com.sitco.api.entities.XmlFile;
 import com.sitco.api.mappers.XmlFileMapper;
 import com.sitco.api.repositories.CuttingJobRepository;
 import com.sitco.api.repositories.XmlFileRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +45,10 @@ public class XmlFileController {
 
     @PostMapping
     public ResponseEntity<XmlFileDto> createXmlFile(
-            @RequestBody XmlFileDto request,
+            @Valid @RequestBody XmlFileDto request,
             UriComponentsBuilder uriComponentsBuilder
     ) {
+
         var cuttingJob = cuttingJobRepository.findById(request.getCuttingJobId()).orElse(null);
         if (cuttingJob == null) {
             return ResponseEntity.badRequest().build();

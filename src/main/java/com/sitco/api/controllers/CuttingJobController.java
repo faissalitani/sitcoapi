@@ -29,6 +29,7 @@ public class CuttingJobController {
     @PersistenceContext
     private EntityManager em;
 
+    // CRUD Methods
     @GetMapping
     public ResponseEntity<List<CuttingJobDto>> getAllCuttingJobs() {
         List<CuttingJob> cuttingJobs = (List<CuttingJob>) cuttingJobRepository.findAll();
@@ -40,7 +41,7 @@ public class CuttingJobController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CuttingJobDto> getCuttingJobById(@PathVariable Long id) {
-        var cuttingJob = cuttingJobRepository.findById(id).orElse(null);
+        var cuttingJob = findCuttingJobById(id);
         if (cuttingJob == null) {
             return ResponseEntity.notFound().build();
         }
@@ -81,7 +82,7 @@ public class CuttingJobController {
             @PathVariable Long id,
             @Valid @RequestBody AddUpdateCuttingJobRequest request
     ){
-        var cuttingJob = cuttingJobRepository.findById(id).orElse(null);
+        var cuttingJob = findCuttingJobById(id);
         if (cuttingJob == null) {
             return ResponseEntity.notFound().build();
         }
@@ -105,12 +106,17 @@ public class CuttingJobController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCuttingJobById(
             @PathVariable Long id){
-        var cuttingJob = cuttingJobRepository.findById(id).orElse(null);
+        var cuttingJob = findCuttingJobById(id);
         if (cuttingJob == null) {
             return ResponseEntity.notFound().build();
         }
         cuttingJobRepository.delete(cuttingJob);
         return ResponseEntity.noContent().build();
+    }
+
+    // Helper Methods
+    CuttingJob findCuttingJobById(Long id){
+        return cuttingJobRepository.findById(id).orElse(null);
     }
 
 }
